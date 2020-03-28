@@ -12,6 +12,8 @@
     <hr>
 
     <div id="emails-view">
+        <table style="width: 100%;">
+        </table>
     </div>
 
 
@@ -32,10 +34,18 @@
         </form>
     </div>
     <div id="individual_email"> 
-        From: <p id="From"></p>
-            To: <p id="To"></p> 
-        Subject: <p id="Subject"></p>
-        Timestamp: <p id="Timestamp"></p>
+        
+            From: <p id="From"></p>
+                To: <p id="To"></p> 
+            Subject: <p id="Subject"></p>
+            Body: <p id="Body"></p>
+            Timestamp: <p id="Timestamp"></p>
+
+            <button id="reply">Reply</button>
+            <button id="archive">Archive</button>
+            <button id="unarchive">Unarchive</button>
+   
+    
     </div>
 {% endblock %}
 

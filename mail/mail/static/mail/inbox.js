@@ -1,3 +1,5 @@
+let current_email = null
+
 document.addEventListener('DOMContentLoaded', function() {
 
   // Use buttons to toggle between views
@@ -6,12 +8,14 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
   document.querySelector('#compose').addEventListener('click', compose_email);
   document.querySelector('#compose-form').addEventListener('submit', send_email);
-//reply
-//archive
+  document.querySelector('#reply').addEventListener('click', reply_email);
+  document.querySelector('#archive').addEventListener('click', () => archive_current_email(true));
+  document.querySelector('#unarchive').addEventListener('click', () => archive_current_email(false)); 
 
   // By default, load the inbox
   load_mailbox('inbox');
 });
+
 function compose_email() {
 
   // Show compose view and hide other views
@@ -35,42 +39,45 @@ function load_mailbox(mailbox) {
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 
-  //Show emails 
+  //Show list of emails 
 fetch(`emails/${mailbox}`)
 .then(response => response.json())
 .then(result => {
-    // Print result
-    console.log(result);
-    //insert if valid ***
-
     result.forEach(function(email){
-      //need to add an href within li
-      const email_element = document.createElement('div');
+      const email_element = document.createElement('tr');
       email_element.addEventListener('click', function() {display_email(email.id);});
-      email_element.innerHTML = `${email.recipients}`;
-      //add class 
+      email_element.innerHTML = `<strong> ${email.recipients}</strong> ${email.subject} ${email.timestamp}`;
       document.querySelector('#emails-view').append(email_element);
+      // email_element.classList.add("boxborder");
+      ;
     });
   });
 }
 
-//indiv email
+//click an indiv email
 function display_email(email_id) {
-  alert("Success")
+  //alert("Success")
   document.querySelector('#individual_email').style.display = 'block';
   document.querySelector('#emails-view').style.display = 'none';
 fetch(`/emails/${email_id}`)
 .then(response => response.json())
 .then(email => {
     // Print email
-    console.log(email);
-    const recipients = document.querySelector('#compose-recipients').value;
-    document.querySelector('#To').innerHTML = ${recipients};
-    //show archive and unarchive 
-    //hide other views
-    //
-    // ... do something else with email ...
+    //console.log(email);
+    current_email = email;
+    From.innerHTML = `${email.recipients}`;
+    To.innerHTML = `${email.recipients}`;
+    Subject.innerHTML = `${email.subject}`;
+    Body.innerHTML = `${email.body}`;
+    Timestamp.innerHTML = `${email.timestamp}`;
 })}
+
+fetch(`/emails/${email_id}`,{
+  method: 'PUT',
+  body: JSON.stringify({
+    read: true
+  })
+})
 
 // Send email
 function send_email(event) {
@@ -92,20 +99,42 @@ function send_email(event) {
   .then(result => {
       // Print result
       console.log(result);
+      //redirect to mailbox
       load_mailbox('sent');
-  });
-  //redirect
+  }); 
   event.preventDefault();
 }
 
-  //to do 
-
-  // show individual email
-
-
-  //REPLY TO EMAIL
+//Reply to email
   function reply_email() {
-    compose_email()
-    document.querySelector('#compose-recipients').value = '';
-    document.querySelector('#compose-subject').value = '';
-  }
+    console.log(current_email);
+    compose_email();
+    document.querySelector('#compose-recipients').value = current_email.sender;
+    document.querySelector('#compose-subject').value = current_email.subject;
+    }
+
+// Archive and Unarchive 
+  function archive_current_email(archived) {
+      fetch(`/emails/${current_email.id}`, {
+        method: 'PUT',
+        body: JSON.stringify({archived: archived,
+        read:true})
+      });
+      load_mailbox('inbox');
+    }
+        
+        
+      // fetch('/emails/100', {
+      //   method: 'PUT',
+      //   body: JSON.stringify({
+      //       archived: true
+      //   })
+      // })
+        // .then(result => load_mailbox('inbox'));
+      // }
+  // .then(response => response.json())
+  //   .then (emails => {
+  //  console.log(current_email);
+  //   (load_mail('inbox');
+  //   });
+  // };
