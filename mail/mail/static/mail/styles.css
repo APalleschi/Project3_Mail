@@ -18,3 +18,10 @@ tr {
   tr:nth-child(even) {
     background-color: #dddddd;
   }
+  .alignleft {
+    float:left
+}
+.alignright {
+    float:right
+}
+

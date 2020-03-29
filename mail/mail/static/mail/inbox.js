@@ -46,7 +46,7 @@ fetch(`emails/${mailbox}`)
     result.forEach(function(email){
       const email_element = document.createElement('tr');
       email_element.addEventListener('click', function() {display_email(email.id);});
-      email_element.innerHTML = `<strong> ${email.recipients}</strong> ${email.subject} ${email.timestamp}`;
+      email_element.innerHTML = `<strong> ${email.sender}</strong> ${email.subject} ${email.timestamp}`;
       document.querySelector('#emails-view').append(email_element);
       // email_element.classList.add("boxborder");
       ;
@@ -65,7 +65,7 @@ fetch(`/emails/${email_id}`)
     // Print email
     //console.log(email);
     current_email = email;
-    From.innerHTML = `${email.recipients}`;
+    From.innerHTML = `${email.sender}`;
     To.innerHTML = `${email.recipients}`;
     Subject.innerHTML = `${email.subject}`;
     Body.innerHTML = `${email.body}`;
@@ -121,20 +121,11 @@ function send_email(event) {
         read:true})
       });
       load_mailbox('inbox');
-    }
-        
-        
-      // fetch('/emails/100', {
-      //   method: 'PUT',
-      //   body: JSON.stringify({
-      //       archived: true
-      //   })
-      // })
-        // .then(result => load_mailbox('inbox'));
+      // if (document.querySelector('#archive').innerHTML=== 'Archive'){
+      //   document.querySelector('#archive').innerHTML= 'Unarchive';
+      // } else {
+      //     document.querySelector('#archive').innerHTML = 'Archive'
       // }
-  // .then(response => response.json())
-  //   .then (emails => {
-  //  console.log(current_email);
-  //   (load_mail('inbox');
-  //   });
-  // };
+
+    }
+      
